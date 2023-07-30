@@ -3,17 +3,31 @@ const app = express();
 const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Laboratorio 2');
 });
 
-app.get('/fletcher', (req, res) => {
+app.get('/fletcher-emit', (req, res) => {
     const data = req.query.data;
+    
     const checksum = fletcherChecksumEmissor(data);
-    res.send(checksum.toString(16));
+    console.log("Sent data: ", data + checksum.toString(16));
+    res.send(data + checksum.toString(16));
+});
+
+app.get('/fletcher-receive', (req, res) => {
+    const data = req.query.data;
+
+    const receivedChecksum = parseInt(data.slice(-1));
+    const receivedData = data.slice(0, -1);
+    console.log('receivedChecksum', receivedChecksum);
+    console.log('receivedData', receivedData);
+    const detectError = fletcherChecksumReceptor(receivedData, receivedChecksum);
+    console.log(detectError);
+    res.send(detectError);
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });
 
 // Emisor
@@ -27,14 +41,14 @@ function fletcherChecksumEmissor(data) {
     }
 
     //Calculamos el checksum
-    const checksum = (sum2 << 1) | sum1;
+    const checksum = sum2;
     return checksum;
 }
 
-//Testeo emisor
-const data = [1, 0, 0, 1, 1, 0, 0, 0];
-const checksum = fletcherChecksumEmissor(data);
-console.log('Sent checksum', checksum.toString(16));
+// //Testeo emisor
+// const data = "100110001";
+// const checksum = fletcherChecksumEmissor(data);
+// console.log('Sent checksum', checksum.toString(16));
 
 
 
@@ -49,11 +63,17 @@ function fletcherChecksumReceptor(data, receivedChecksum) {
     }
 
     //Calculamos el checksum
-    const checksum = (sum2 << 1) | sum1;
+    const checksum = sum2;
     
-    return checksum === receivedChecksum;
+    const isValid = checksum === receivedChecksum;
+
+    if(isValid) {
+        return "Data received is valid: " + data;
+    } else {
+        return "Checksum is invalid";
+    }
+
 }
 
-errorData = [1, 1, 0, 1, 1, 0, 0, 0];
-
-console.log('Checksum is valid?', fletcherChecksumReceptor(errorData, checksum));
+// receivedData = "100110001";
+// console.log(fletcherChecksumReceptor(receivedData, checksum));
