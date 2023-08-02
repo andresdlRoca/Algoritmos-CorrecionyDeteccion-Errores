@@ -1,5 +1,4 @@
 import requests
-import math
 
 # Receive data from this endpoint
 url = 'http://localhost:3000/fletcher-emit'

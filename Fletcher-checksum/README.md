@@ -21,6 +21,9 @@ ruby emisor.rb
 #### Prerequisitos
 - Python (3.10.5^)
 
+#### Dependencias/Librerias
+- Requests
+
 #### Uso
 Dentro del programa:
 ```
