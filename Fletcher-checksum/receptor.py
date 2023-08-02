@@ -3,9 +3,9 @@ import math
 
 # Receive data from this endpoint
 url = 'http://localhost:3000/fletcher-emit'
-params = {'data': '100110001'}
+params = {'data': '100110001'} # Cambiar este parametro para enviar datos
 
-response = requests.get(url, params=params)
+response = requests.get(url, params=params) 
 # print('Response', response.json())
 
 def fletcherChecksumReceptor(data, receivedChecksum):
