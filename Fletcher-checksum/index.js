@@ -14,21 +14,13 @@ app.get('/fletcher-emit', (req, res) => {
     res.send(data + checksum.toString(16));
 });
 
-app.get('/fletcher-receive', (req, res) => {
-    const data = req.query.data;
-
-    const receivedChecksum = parseInt(data.slice(-1));
-    const receivedData = data.slice(0, -1);
-    console.log('receivedChecksum', receivedChecksum);
-    console.log('receivedData', receivedData);
-    const detectError = fletcherChecksumReceptor(receivedData, receivedChecksum);
-    console.log(detectError);
-    res.send(detectError);
-});
-
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
+
+function custom_modulo(a, b) {
+    return ((a % b) + b) % b;
+};
 
 // Emisor
 function fletcherChecksumEmissor(data) {
@@ -36,12 +28,14 @@ function fletcherChecksumEmissor(data) {
     let sum2 = 0;
 
     for (let i = 0; i < data.length; i++) {
-        sum1 = (sum1 + data[i]) % 2;
-        sum2 = (sum2 + sum1) % 2;
+        sum1 = custom_modulo((sum1 + data[i]), 2);
+        console.log('sum1', sum1);
+        sum2 = custom_modulo((sum2 + sum1), 2);
+        console.log('sum2', sum2);
     }
-
     //Calculamos el checksum
     const checksum = sum2;
+    console.log('checksum', checksum);
     return checksum;
 }
 
