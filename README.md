@@ -5,7 +5,7 @@ El objetivo principal de este laboratorio es practicar y entender el uso de los 
 
 Los algorimos elegidos fueron:
 - [Fletcher checksum (Corrección de errores)](./Fletcher-checksum/)
-- 
+- [Codigo Hamming (Corrección de errores)](./Hamming/)
 
 ## Autores
 👤 Andrés de la Roca  
@@ -14,3 +14,4 @@ Los algorimos elegidos fueron:
 
 👤 Jun Woo Lee  
 - <a href="https://github.com/jwlh00">Github</a>  
+- <a href = "https://www.linkedin.com/in/leejunwoo00/">Linkedin</a>  
