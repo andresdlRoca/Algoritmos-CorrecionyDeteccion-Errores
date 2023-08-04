@@ -1,46 +1,46 @@
 import requests
 
 def hamming_decode(encoded_data):
-    n = len(encoded_data)
-    r = 0
-    while 2**r <= n:
-        r += 1
-    m = n - r
+    try:
+        n = len(encoded_data)
+        r = 0
+        while 2**r < n - r + 1:
+            r += 1
 
-    parity_bits = [int(encoded_data[2**i - 1]) for i in range(r)]
-    calculated_parity = []
-    for i in range(r):
-        parity = 0
-        for j, bit in enumerate(encoded_data):
-            if j + 1 != 2**i and (j + 1) & 2**i != 0:
-                parity ^= int(bit)
-        calculated_parity.append(parity)
+        error_pos = 0
+        for i in range(r):
+            parity = 0
+            for j in range(1, n + 1):
+                if j & (1 << i) != 0:
+                    parity ^= int(encoded_data[j - 1])
+            if parity != 0:
+                error_pos += 2**i
 
-    error_pos = 0
-    for i in range(r):
-        if parity_bits[i] != calculated_parity[i]:
-            error_pos += 2**i
+        if error_pos != 0:
+            encoded_data = encoded_data[:error_pos - 1] + str(1 - int(encoded_data[error_pos - 1])) + encoded_data[error_pos:]
 
-    if error_pos != 0:
-        encoded_data = encoded_data[:error_pos - 1] + str(1 - int(encoded_data[error_pos - 1])) + encoded_data[error_pos:]
-
-    decoded_data = ''.join([encoded_data[i] for i in range(n) if (i & (i + 1)) != 0])
-    return decoded_data, error_pos
+        decoded_data = ''.join([encoded_data[i - 1] for i in range(1, n + 1) if (i & (i - 1)) == 0])
+        return decoded_data, error_pos
+    except IndexError:
+        print("Error: Encoded data length is not consistent with expected Hamming encoding.")
+        return None, None
 
 url = 'http://localhost:3000/hamming-emit'
-params = {'data': '1101010'}
+params = {'data': '100010001'}
 
 response = requests.get(url, params=params)
 encoded_data = response.text
 
+# Uncomment the following line to introduce a single-bit error (e.g., flip the last bit)
+# encoded_data = '1011110'
 
-encoded_data = '11101011011' #introduce a single-bit error
+result = hamming_decode(encoded_data)
 
-decoded_data, error_pos = hamming_decode(encoded_data)
-
-print("Encoded data:", encoded_data)
-print("Decoded data:", decoded_data)
-if error_pos != 0:
-    print(f"Corrected error at position {error_pos}")
-else:
-    print("No errors detected")
+if result is not None:
+    decoded_data, error_pos = result
+    print("Encoded data:", encoded_data)
+    print("Decoded data:", decoded_data)
+    if error_pos != 0:
+        print(f"Corrected error at position {error_pos}")
+    else:
+        print("No errors detected")
