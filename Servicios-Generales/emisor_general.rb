@@ -6,13 +6,64 @@ server.mount_proc '/' do |req, res|
     res.body = "Laboratorio 2.2 - General Emissor"
 end
 
+# -- Enviar Informacion -- #
 server.mount_proc '/fletcher-emit' do |req, res|
-    res.body = fletcherCheckSumEmissor(req.query["data"])
+    res.body = useFletcher(req.query["data"])
 end
 
 server.mount_proc '/hamming-emit' do |req, res|
-    res.body = hamming_encode(req.query["data"])
+    res.body = useHamming(req.query["data"])
 end
+
+def useFletcher(data)
+  binary_msg = codificarMensaje(data)
+  for i in 0..binary_msg.length-1
+    binary_msg[i] = fletcherCheckSumEmissor(binary_msg[i])
+  end
+  for i in 0..binary_msg.length-1
+    binary_msg[i] = aplicarRuido(binary_msg[i])
+  end
+  mensaje_a_enviar = binary_msg.join('.')
+  return mensaje_a_enviar
+end
+
+def useHamming(data)
+  binary_msg = codificarMensaje(data)
+  for i in 0..binary_msg.length-1
+    binary_msg[i] = hamming_encode(binary_msg[i])
+  end
+  for i in 0..binary_msg.length-1
+    binary_msg[i] = aplicarRuido(binary_msg[i])
+  end
+  mensaje_a_enviar = binary_msg.join('.')
+  return mensaje_a_enviar
+end
+
+
+def codificarMensaje(data)
+    binary_strings = []
+
+    data.each_char do |char|
+      ascii_value = char.ord  
+      binary_string = ascii_value.to_s(2)
+      binary_strings << binary_string
+    end
+
+    return binary_strings
+    
+end
+
+def aplicarRuido(mensaje_binario , probabilidad = 1)
+  mensaje_binario.chars.map do |bit|
+    if rand(100) < probabilidad
+      bit == '0' ? '1' : '0'
+    else
+      bit
+    end
+  end.join
+end
+
+
 
 def fletcherCheckSumEmissor(data)
     # data: string
