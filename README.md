@@ -9,7 +9,7 @@ Los algorimos elegidos fueron:
 
 ## Laboratorio 2.2
 
-Aqui va una descripcion nice...
+El objetivo de este laboratorio es entender el funcionamiento de un modelo de capas y sus servicios, esto se logra mediante la implementacion de sockets para la transmision de informacion, experimentando con transmisiones expuestas a un canal "no confiable" simulado. Adicionalmente para cada uno de los algoritmos de correccion y deteccion de errores implementados anteriormente se deberan de utilizar para detectar si el "ruido" a traves el cual fue enviada la informacion tuvo algun efecto en la integridad del mensaje.
 
 Codigo utilizado:
 [Servicios Generales](./Servicios-Generales/)
