@@ -11,7 +11,7 @@ server.mount_proc '/fletcher-emit' do |req, res|
 end
 
 def fletcherCheckSumEmissor(data)
-    # data: string
+    # data: string/
     # return: string
 
     sum1 = 0

@@ -31,7 +31,7 @@ def hamming_encode(data)
   encoded
 end
 
-server = WEBrick::HTTPServer.new(Port: 3000)
+server = WEBrick::HTTPServer.new(Port: 3001)
 server.mount_proc '/hamming-emit' do |req, res|
   data = req.query['data']
   encoded_data = hamming_encode(data)

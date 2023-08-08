@@ -7,6 +7,13 @@ Los algorimos elegidos fueron:
 - [Fletcher checksum (Corrección de errores)](./Fletcher-checksum/)
 - [Codigo Hamming (Corrección de errores)](./Hamming/)
 
+## Laboratorio 2.2
+
+Aqui va una descripcion nice...
+
+Codigo utilizado:
+[Servicios Generales](./Servicios-Generales/)
+
 ## Autores
 👤 Andrés de la Roca  
 - <a href = "https://www.linkedin.com/in/andr%C3%A8s-de-la-roca-pineda-10a40319b/">Linkedin</a>  

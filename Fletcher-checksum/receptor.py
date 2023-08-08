@@ -2,7 +2,7 @@ import requests
 
 # Receive data from this endpoint
 url = 'http://localhost:3000/fletcher-emit'
-params = {'data': '100110001'} # Cambiar este parametro para enviar datos
+params = {'data': '1010110001'} # Cambiar este parametro para enviar datos
 
 response = requests.get(url, params=params) 
 # print('Response', response.json())
@@ -31,4 +31,7 @@ receivedData = str(response.json())
 receivedChecksum = receivedData[-1]
 receivedData = receivedData[:-1]
 
+print("Trama utilizada:", params["data"])
+receivedData = "0101001110"
+print("Modficicacion trama:", receivedData)
 print(fletcherChecksumReceptor(receivedData, receivedChecksum))
