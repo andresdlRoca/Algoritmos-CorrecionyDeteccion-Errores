@@ -1,5 +1,10 @@
 import requests 
 
+
+def recibirInformacion(url, params):
+    response = requests.get(url, params=params)
+    return response.text
+
 def fletcherChecksumReceptor(data, receivedChecksum):
 
     sum1 = 0
@@ -13,11 +18,22 @@ def fletcherChecksumReceptor(data, receivedChecksum):
 
     isValid = str(checksum) == str(receivedChecksum)
 
+    # Verificacion integridad
     if isValid:
-        return 'Valid data: ' + data
+        print("Integridad: OK: " + data)
+        return True
     else:
-        return 'Invalid data'
+        print("Integridad: ERROR")
+        return False
 
+
+def decodificarMensaje(data):
+    ascii_list = []
+
+    for i in range(0, len(data), 7):
+        ascii_list.append(chr(int(data[i:i+7], 2)))
+    
+    return ''.join(ascii_list)
 
 def hamming_decode(encoded_data):
     try:
@@ -43,3 +59,62 @@ def hamming_decode(encoded_data):
     except IndexError:
         print("Error: Encoded data length is not consistent with expected Hamming encoding.")
         return None, None
+
+def main():
+    run = True
+
+    while run:
+        print("\n-- Menu --")
+        print("1. Fletcher")
+        print("2. Hamming")
+        print("3. Salir")
+
+        opcion = input("Ingrese una opcion: ")
+
+        if opcion == "1":
+            print('Fletcher')
+            chequeIntegridad = []
+            mensaje_sinChecksum = []
+            mensaje = str(input("\nIngrese el mensaje: "))
+            mensaje_recibido = recibirInformacion("http://localhost:3000/fletcher-emit", {'data': mensaje})
+            print("Mensaje codificado recibido: ", mensaje_recibido)
+            mensaje_recibido = mensaje_recibido.split('.')
+            for char in mensaje_recibido:
+                chequeIntegridad.append(fletcherChecksumReceptor(char[:-1], char[-1]))
+                mensaje_sinChecksum.append(char[:-1])
+
+            if False in chequeIntegridad:
+                print("Mensaje recibido con errores")
+            else:
+                print("Mensaje recibido sin errores")
+                print("Mensaje decodificado: ", decodificarMensaje(''.join(mensaje_sinChecksum)))
+
+                
+        elif opcion == "2":
+            print('Hamming')
+            chequeIntegridad = []
+            mensaje_sinChecksum = []
+            mensaje = str(input("\nIngrese el mensaje: "))
+            mensaje_recibido = recibirInformacion("http://localhost:3000/hamming-emit", {'data': mensaje})
+            print("Mensaje codificado recibido: ", mensaje_recibido)
+            mensaje_recibido = mensaje_recibido.split('.')
+
+            # TODO: Adaptar para que funcione con la correccion de errores
+            for char in mensaje_recibido:
+                chequeIntegridad.append(hamming_decode(char))
+                mensaje_sinChecksum.append(char[:-1])
+            
+            if False in chequeIntegridad:
+                print("Mensaje recibido con errores")
+            else:
+                print("Mensaje recibido sin errores")
+                print("Mensaje decodificado: ", decodificarMensaje(''.join(mensaje_sinChecksum)))
+
+        elif opcion == "3":
+            print("Saliendo...")
+            run = False
+        else:
+            print("Opcion invalida")
+
+if __name__ == "__main__":
+    main()
