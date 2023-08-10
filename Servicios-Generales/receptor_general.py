@@ -216,14 +216,14 @@ def main():
             plt.show()
 
             # BoxPlot for runtime
-            # data = [fletcher_times, hamming_times]
-            # labels = ['Fletcher', 'Hamming']
-            # plt.boxplot(data, vert=True, patch_artist=True, labels=labels)
-            # plt.title('Comparison of Algorithm Runtimes')
-            # plt.ylabel('Runtime (seconds)')
-            # plt.grid(axis='y')
+            data = [fletcher_times, hamming_times]
+            labels = ['Fletcher', 'Hamming']
+            plt.boxplot(data, vert=True, patch_artist=True, labels=labels)
+            plt.title('Comparison of Algorithm Runtimes')
+            plt.ylabel('Runtime (seconds)')
+            plt.grid(axis='y')
 
-            # plt.show()
+            plt.show()
 
 
         elif opcion == "4":
